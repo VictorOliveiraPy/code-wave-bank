@@ -1,18 +1,19 @@
-.PHONY: postgres createdb migrateup migratedown
+.PHONY: postgres createdb migrateup migratedown sqlc
 
 postgres:
 	docker run --name bank_code -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=88658710 -d postgres:latest
- 
 
 createdb:
 	docker exec -it bank_code createdb --username=root --owner=root code_wave_bank
-
 
 migrateup:
 	migrate -path db/migration -database "postgresql://root:88658710@localhost:5432/code_wave_bank?sslmode=disable" -verbose up	
 
 migratedown:
 	migrate -path db/migration -database "postgresql://root:88658710@localhost:5432/code_wave_bank?sslmode=disable" -verbose down
+
+sqlc:
+	sqlc migrate
 
 dropdb:
 	docker exec -it bank_code dropdb code_wave_bank
